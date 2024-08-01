@@ -6,7 +6,7 @@ db = SQLAlchemy()
 class Product(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    nim = Column(String)  # Ensure this column is defined
+    nim = Column(String)
     presensi = Column(Integer)
     nilai_tugas = Column(Integer)
     nilai_uts = Column(Integer)
