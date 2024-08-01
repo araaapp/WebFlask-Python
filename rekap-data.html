@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Mahasiswa</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #2e3a59, #4a4e69, #22223b);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #fff;
+      }
+      h1 {
+        text-align: center;
+        color: #f8f9fa;
+        margin-top: 20px;
+        font-size: 2.5rem;
+        font-weight: 300;
+      }
+      table {
+        width: 90%;
+        border-collapse: collapse;
+        background-color: rgba(255, 255, 255, 0.9);
+        margin: 20px auto;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        color: #333;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      th {
+        background-color: #4a4e69;
+        color: white;
+        font-weight: bold;
+      }
+      td:last-child {
+        text-align: center;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        width: 100%;
+      }
+      .card h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+      }
+      label {
+        color: #333;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 400px;
+        text-align: left;
+      }
+      input {
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        width: 100%;
+        max-width: 400px;
+      }
+      input:focus {
+        outline: none;
+        border-color: #4a4e69;
+      }
+      button {
+        background-color: #4a4e69;
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        width: 50%;
+        max-width: 200px;
+      }
+      button:hover {
+        background-color: #2e3a59;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+      .action-buttons a {
+        text-decoration: none;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .action-buttons .edit {
+        background-color: #4caf50;
+      }
+      .action-buttons .delete {
+        background-color: #f44336;
+      }
+      .action-buttons .edit:hover {
+        background-color: #45a049;
+      }
+      .action-buttons .delete:hover {
+        background-color: #e53935;
+      }
+    </style>
+    <script>
+      function confirmDeletion(event) {
+        if (!confirm("Apakah anda yakin untuk menghapus data ini?")) {
+          event.preventDefault();
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Data Rekap Nilai Mahasiswa</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>NAMA</th>
+          <th>NIM</th>
+          <th>Presensi</th>
+          <th>Nilai Tugas</th>
+          <th>Nilai UTS</th>
+          <th>Nilai UAS</th>
+          <th>Total Nilai</th>
+          <th>Rata-Rata</th>
+          <th>Nilai Huruf</th>
+          <th>Status</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.nim }}</td>
+          <td>{{ product.presensi }}</td>
+          <td>{{ product.nilai_tugas }}</td>
+          <td>{{ product.nilai_uts }}</td>
+          <td>{{ product.nilai_uas }}</td>
+          <td>{{ product.total_nilai }}</td>
+          <td>{{ product.rata_rata }}</td>
+          <td>{{ product.nilai_huruf }}</td>
+          <td>{{ product.status }}</td>
+          <td>
+            <div class="action-buttons">
+              <a href="/?edit_id={{ product.id }}" class="edit">
+                <i class="fas fa-edit"></i> Edit
+              </a>
+              <a
+                href="/delete/{{ product.id }}"
+                class="delete"
+                onclick="confirmDeletion(event)"
+              >
+                <i class="fas fa-trash-alt"></i> Delete
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="container">
+      <div class="card">
+        <h2>{{ 'Edit Data' if product else 'Tambah Data' }}</h2>
+        <form
+          action="{{ url_for('edit_product', id=product.id) if product else url_for('add_product') }}"
+          method="POST"
+        >
+          <label for="name">NAMA:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value="{{ product.name if product else '' }}"
+            required
+          />
+
+          <label for="nim">NIM:</label>
+          <input
+            type="text"
+            id="nim"
+            name="nim"
+            value="{{ product.nim if product else '' }}"
+            required
+          />
+
+          <label for="presensi">Presensi:</label>
+          <input
+            type="number"
+            id="presensi"
+            name="presensi"
+            value="{{ product.presensi if product else '' }}"
+            required
+          />
+
+          <label for="nilai_tugas">Nilai Tugas:</label>
+          <input
+            type="number"
+            id="nilai_tugas"
+            name="nilai_tugas"
+            value="{{ product.nilai_tugas if product else '' }}"
+            required
+          />
+
+          <label for="nilai_uts">Nilai UTS:</label>
+          <input
+            type="number"
+            id="nilai_uts"
+            name="nilai_uts"
+            value="{{ product.nilai_uts if product else '' }}"
+            required
+          />
+
+          <label for="nilai_uas">Nilai UAS:</label>
+          <input
+            type="number"
+            id="nilai_uas"
+            name="nilai_uas"
+            value="{{ product.nilai_uas if product else '' }}"
+            required
+          />
+
+          <button type="submit">
+            {{ 'Update Data' if product else 'Tambah Data' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
