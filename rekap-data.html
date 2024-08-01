@@ -145,6 +145,13 @@
   </head>
   <body>
     <h1>Rekap Nilai Data Mahasiswa</h1>
+    <script>
+      function printPage() {
+          window.print();
+      }
+  </script>
+ <button onclick="printPage()">Cetak Halaman</button>
+    </div>
     <table>
       <thead>
         <tr>
@@ -184,8 +191,7 @@
               <a
                 href="/delete/{{ product.id }}"
                 class="delete"
-                onclick="confirmDeletion(event)"
-              >
+                onclick="confirmDeletion(event)">
                 <i class="fas fa-trash-alt"></i> Delete
               </a>
             </div>
